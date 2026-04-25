@@ -14,6 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
 from utils.salesforce_client import SalesforceClient
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 # ============================================
 # Configure Logging
@@ -35,6 +37,16 @@ app = FastAPI(
     description="API for managing Salesforce Permit Applications, Submissions, and Reviews",
     version="1.0.0"
 )
+# ============================================
+# Serve Frontend (HTML, CSS, JS)
+# ============================================
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
+# Mount static files (CSS, JS)
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
+
 
 # Enable CORS for frontend
 app.add_middleware(
@@ -251,8 +263,9 @@ def lookup_contractor_license_by_type(sf, license_type: str) -> str:
 # ============================================
 
 @app.get("/")
-def root():
-    return {"message": "Salesforce Permit Management API", "status": "running"}
+def serve_frontend():
+    index_path = os.path.join(FRONTEND_DIR, "index.html")
+    return FileResponse(index_path)
 
 
 @app.get("/health")

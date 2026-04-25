@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = '/api';
 
 // Default permit type to select
 const DEFAULT_PERMIT_TYPE = 'Mechanical';
