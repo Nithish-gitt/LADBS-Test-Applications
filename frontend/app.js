@@ -323,7 +323,8 @@ document.getElementById('permitForm').addEventListener('submit', async function(
             
             showSuccessModal(
                 'Permit Application Created!',
-                'Your permit application has been created successfully.',
+                'Your permit application has been created successfully in qa2 console.',
+                'Please do complete work items/valuation items, LAHD questionnaires, Select APN, Capture-inperson declaration before going to complete submissions.',
                 `Application Number: ${data.applicationName}`
             );
             
