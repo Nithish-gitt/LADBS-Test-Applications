@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce Permit Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Homepage -->
+        <div id="homepage" class="page active">
+            <div class="header">
+                <h1>Permit Management System</h1>
+                <p>Manage your permit applications, submissions, and reviews</p>
+            </div>
+            <div class="button-container">
+                <button class="main-btn create-btn" onclick="showCreatePermitPage()">
+                    <span class="btn-text">Create Permit Application</span>
+                </button>
+                <button class="main-btn submission-btn" onclick="openSubmissionModal()">
+                    <span class="btn-text">Complete Submissions</span>
+                </button>
+                <button class="main-btn review-btn" onclick="openReviewModal()">
+                    <span class="btn-text">Complete Reviews</span>
+                </button>
+            </div>
+            
+            <!-- Permit Application History Section -->
+            <div class="history-section">
+                <h2>Permit Applications Created Previously</h2>
+                <div id="historyTableContainer">
+                    <table id="historyTable" class="history-table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Permit Type</th>
+                                <th>Application Number</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="4" class="loading-row">Loading permit history...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Permit Application Page -->
+        <div id="createPermitPage" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="goToHomepage()">← Back</button>
+                <h1>Create Permit Application</h1>
+            </div>
+            <form id="permitForm" class="form-container">
+                <div class="form-group">
+                    <label for="applicant">Applicant Name *</label>
+                    <input type="text" id="applicant" name="applicant" value="Nithish Vemula" placeholder="Enter applicant name (e.g., John Doe)" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <input type="text" id="address" name="address" value="4120 S CAROLINA PL LOS ANGELES CA 90731" placeholder="Enter address (e.g., 123 Main St)" required>
+                </div>
+                <div class="form-group">
+                    <label for="permitType">Permit Type *</label>
+                    <select id="permitType" name="permitType" required>
+                        <option value="">-- Loading Permit Types... --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="applicantRole">Applicant Role *</label>
+                    <select id="applicantRole" name="applicantRole" required onchange="handleApplicantRoleChange()">
+                        <option value="">-- Select Role --</option>
+                        <option value="Owner/Builder">Owner/Builder</option>
+                        <option value="Agent for Owner" selected>Agent for Owner</option>
+                        <option value="Agent for Contractor">Agent for Contractor</option>
+                        <option value="Contractor">Contractor</option>
+                        <option value="Maintenance Supervisor">Maintenance Supervisor</option>
+                    </select>
+                </div>
+                <div class="form-group" id="licenseTypeGroup" style="display: none;">
+                    <label for="licenseType">License Type *</label>
+                    <select id="licenseType" name="licenseType">
+                        <option value="">-- Loading License Types... --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="useClass">Use Class *</label>
+                    <select id="useClass" name="useClass" required>
+                        <option value="">-- Select Use Class --</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="1 or 2 Family Dwelling" selected>1 or 2 Family Dwelling</option>
+                        <option value="Apartment/Condominium">Apartment/Condominium</option>
+                    </select>
+                </div>
+                <div id="formError" class="form-error"></div>
+                <button type="submit" class="submit-btn">Create Permit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Complete Submissions Modal -->
+    <div id="submissionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSubmissionModal()">&times;</span>
+            <h2>Complete All Submissions</h2>
+            <p>Enter the Application Number to complete all related submissions</p>
+            <div class="form-group">
+                <label for="submissionAppNumber">Application Number *</label>
+                <input type="text" id="submissionAppNumber" placeholder="Enter Application Number" required>
+            </div>
+            <button class="submit-btn" onclick="completeAllSubmissions()">Complete All Submissions</button>
+            <div id="submissionResult" class="result-message"></div>
+        </div>
+    </div>
+
+    <!-- Complete Reviews Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeReviewModal()">&times;</span>
+            <h2>Complete All Reviews</h2>
+            <p>Enter the Application Number to complete all related reviews</p>
+            <div class="form-group">
+                <label for="reviewAppNumber">Application Number *</label>
+                <input type="text" id="reviewAppNumber" placeholder="Enter Application Number" required>
+            </div>
+            <button class="submit-btn" onclick="completeAllReviews()">Complete All Reviews</button>
+            <div id="reviewResult" class="result-message"></div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <span class="close-btn" onclick="closeSuccessModal()">&times;</span>
+            <div class="success-icon">✓</div>
+            <h2 id="successModalTitle">Success!</h2>
+            <p id="successModalMessage"></p>
+            <p id="successModalDetails" class="details-text"></p>
+            <button class="submit-btn" onclick="closeSuccessModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
